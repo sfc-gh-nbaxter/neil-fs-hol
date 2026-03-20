@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zero to Snowflake: Financial Services Risk Management | Hands-On Lab</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="https://www.logo.wine/a/logo/Snowflake_Inc./Snowflake_Inc.-Logo.wine.svg">
+<style>
+:root {
+    --sf-blue-primary: #29B5E8;
+    --sf-blue-dark: #1565C0;
+    --sf-blue-light: #E3F2FD;
+    --sf-green: #51cf66;
+    --sf-red: #ff6b6b;
+    --sf-yellow: #ffd43b;
+    --sf-orange: #ff922b;
+    --gray-50: #f8fafc;
+    --gray-100: #f1f5f9;
+    --gray-200: #e2e8f0;
+    --gray-300: #cbd5e1;
+    --gray-400: #94a3b8;
+    --gray-500: #64748b;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1e293b;
+    --gray-900: #0f172a;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    --header-height: 64px;
+    --sidebar-width: 280px;
+    --content-max-width: 900px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-full: 9999px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-height) + 1.5rem); }
+body { font-family: var(--font-family); font-size: 16px; line-height: 1.6; color: var(--gray-800); background: var(--gray-50); -webkit-font-smoothing: antialiased; }
+a { color: var(--sf-blue-primary); text-decoration: none; transition: color var(--transition-fast); }
+a:hover { color: var(--sf-blue-dark); }
+img { max-width: 100%; height: auto; }
+
+.hol-header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-height); background: white; border-bottom: 1px solid var(--gray-200); z-index: 100; box-shadow: var(--shadow-sm); }
+.header-container { max-width: 1400px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; }
+.logo-section { display: flex; align-items: center; gap: 1rem; }
+.snowflake-logo { height: 40px; width: auto; }
+.logo-divider { width: 1px; height: 24px; background: var(--gray-300); }
+.hol-badge { background: linear-gradient(135deg, var(--sf-blue-primary), var(--sf-blue-dark)); color: white; padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+.header-nav { display: flex; gap: 1.5rem; }
+.header-nav a { color: var(--gray-600); font-weight: 500; font-size: 0.875rem; padding: 0.5rem; border-radius: var(--radius-sm); transition: all var(--transition-fast); }
+.header-nav a:hover { color: var(--sf-blue-primary); background: var(--sf-blue-light); }
+
+.hero-section { margin-top: var(--header-height); background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%); padding: 4rem 0; color: white; }
+.hero-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+.industry-tag { display: inline-block; background: rgba(41,181,232,0.2); color: var(--sf-blue-primary); padding: 0.25rem 1rem; border-radius: var(--radius-full); font-size: 0.875rem; font-weight: 500; margin-bottom: 1rem; }
+.hero-title { font-size: 2.5rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; }
+.hero-subtitle { font-size: 1.125rem; color: var(--gray-300); margin-bottom: 2rem; line-height: 1.7; }
+.hero-meta { display: flex; gap: 2rem; margin-bottom: 2rem; }
+.meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--gray-400); font-size: 0.875rem; }
+.meta-icon { width: 18px; height: 18px; fill: currentColor; }
+.hero-cta { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--sf-blue-primary); color: white; padding: 1rem 2rem; border-radius: var(--radius-md); font-weight: 600; transition: all var(--transition-fast); }
+.hero-cta:hover { background: var(--sf-blue-dark); color: white; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(41,181,232,0.4); }
+.architecture-preview { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-lg); padding: 2rem; backdrop-filter: blur(10px); font-size: 0.8rem; color: var(--gray-300); }
+.architecture-preview pre { white-space: pre; font-family: var(--font-mono); line-height: 1.4; }
+
+.content-section { padding: 4rem 0; }
+.content-section.alt-bg { background: white; }
+.section-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+.section-title { font-size: 1.75rem; font-weight: 700; color: var(--gray-900); margin-bottom: 2rem; position: relative; padding-bottom: 1rem; }
+.section-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 60px; height: 4px; background: linear-gradient(90deg, var(--sf-blue-primary), var(--sf-blue-dark)); border-radius: var(--radius-full); }
+
+.overview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.overview-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); padding: 2rem; transition: all var(--transition-fast); }
+.overview-card:hover { border-color: var(--sf-blue-primary); box-shadow: var(--shadow-md); }
+.overview-card.highlight { background: linear-gradient(135deg, var(--sf-blue-light), white); border-color: var(--sf-blue-primary); }
+.overview-card h3 { font-size: 1rem; font-weight: 600; color: var(--gray-700); margin-bottom: 1rem; }
+.learning-list { list-style: none; }
+.learning-list li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: var(--gray-600); }
+.learning-list li::before { content: ''; position: absolute; left: 0; top: 8px; width: 8px; height: 8px; background: var(--sf-blue-primary); border-radius: 50%; }
+.tech-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tech-tag { display: inline-flex; align-items: center; gap: 0.25rem; background: var(--gray-100); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-size: 0.8125rem; color: var(--gray-700); }
+
+.progress-tracker { position: fixed; left: 0; top: var(--header-height); bottom: 0; width: var(--sidebar-width); background: white; border-right: 1px solid var(--gray-200); padding: 2rem; overflow-y: auto; z-index: 50; }
+.progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; font-weight: 600; color: var(--gray-700); }
+.progress-percent { color: var(--sf-blue-primary); }
+.progress-bar { height: 6px; background: var(--gray-200); border-radius: var(--radius-full); margin-bottom: 2rem; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--sf-blue-primary), var(--sf-green)); border-radius: var(--radius-full); width: 0%; transition: width var(--transition-normal); }
+.steps-nav { display: flex; flex-direction: column; gap: 0.25rem; }
+.step-nav-item { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; border-radius: var(--radius-md); color: var(--gray-600); font-size: 0.8rem; transition: all var(--transition-fast); text-decoration: none; cursor: pointer; }
+.step-nav-item:hover { background: var(--gray-100); color: var(--gray-800); }
+.step-nav-item.active { background: var(--sf-blue-light); color: var(--sf-blue-dark); font-weight: 500; }
+.step-nav-item.completed { color: var(--sf-green); }
+.step-nav-item .step-indicator { width: 24px; height: 24px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 600; flex-shrink: 0; }
+.step-nav-item.completed .step-indicator { background: var(--sf-green); border-color: var(--sf-green); color: white; }
+
+.steps-container { margin-left: var(--sidebar-width); padding: 2rem; max-width: calc(var(--content-max-width) + var(--sidebar-width) + 6rem); }
+.step-card { background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-lg); margin-bottom: 2rem; overflow: hidden; transition: all var(--transition-fast); animation: fadeIn 0.3s ease; }
+.step-card:hover { box-shadow: var(--shadow-md); }
+.step-card.completed { border-color: var(--sf-green); }
+.step-card.completed .step-number { background: var(--sf-green); }
+.step-header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem; background: var(--gray-50); border-bottom: 1px solid var(--gray-200); cursor: pointer; }
+.step-number { width: 40px; height: 40px; background: var(--sf-blue-primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem; flex-shrink: 0; }
+.step-info { flex: 1; }
+.step-title { font-size: 1.125rem; font-weight: 600; color: var(--gray-800); margin: 0; }
+.step-duration { font-size: 0.8125rem; color: var(--gray-500); }
+.step-toggle { background: none; border: none; padding: 0.5rem; cursor: pointer; color: var(--gray-400); transition: transform var(--transition-fast); }
+.step-toggle[aria-expanded="false"] { transform: rotate(-90deg); }
+.step-toggle svg { width: 24px; height: 24px; fill: currentColor; }
+.step-content { padding: 2rem; }
+.step-content.collapsed { display: none; }
+.step-description { color: var(--gray-600); margin-bottom: 2rem; line-height: 1.7; }
+.step-actions { display: flex; justify-content: flex-end; padding-top: 1.5rem; border-top: 1px solid var(--gray-200); margin-top: 2rem; }
+.btn-check { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--gray-100); color: var(--gray-700); border: none; padding: 0.5rem 1.5rem; border-radius: var(--radius-md); font-weight: 500; cursor: pointer; transition: all var(--transition-fast); font-family: var(--font-family); font-size: 0.875rem; }
+.btn-check:hover { background: var(--sf-green); color: white; }
+.btn-check svg { width: 18px; height: 18px; fill: currentColor; }
+
+.code-block { background: var(--gray-900); border-radius: var(--radius-md); margin: 1.5rem 0; overflow: hidden; }
+.code-header { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 1rem; background: var(--gray-800); border-bottom: 1px solid var(--gray-700); }
+.code-language { color: var(--gray-400); font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+.code-actions { display: flex; gap: 0.25rem; }
+.code-actions button { background: transparent; border: none; padding: 0.25rem; cursor: pointer; color: var(--gray-400); border-radius: var(--radius-sm); transition: all var(--transition-fast); }
+.code-actions button:hover { background: var(--gray-700); color: var(--sf-blue-primary); }
+.code-actions button svg { width: 18px; height: 18px; fill: currentColor; }
+.code-block pre { margin: 0; padding: 1.5rem; overflow-x: auto; }
+.code-block code { font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; color: var(--gray-100); }
+.code-block .keyword { color: var(--sf-blue-primary); font-weight: 500; }
+.code-block .function { color: var(--sf-yellow); }
+.code-block .string { color: var(--sf-green); }
+.code-block .number { color: var(--sf-orange); }
+.code-block .comment { color: var(--gray-500); font-style: italic; }
+
+.callout { display: flex; gap: 1rem; padding: 1.5rem; border-radius: var(--radius-md); margin: 1.5rem 0; }
+.callout-icon { flex-shrink: 0; font-size: 1.25rem; }
+.callout-content { flex: 1; }
+.callout-content strong { display: block; margin-bottom: 0.25rem; }
+.callout-content p { margin: 0; font-size: 0.9375rem; }
+.callout-info { background: var(--sf-blue-light); border-left: 4px solid var(--sf-blue-primary); }
+.callout-warning { background: #fff9e6; border-left: 4px solid var(--sf-yellow); }
+.callout-success { background: #e6fff2; border-left: 4px solid var(--sf-green); }
+.callout-tip { background: #f0fff0; border-left: 4px solid var(--sf-green); }
+.callout-danger { background: #fff0f0; border-left: 4px solid var(--sf-red); }
+
+.table-wrapper { overflow-x: auto; margin: 1.5rem 0; border-radius: var(--radius-md); border: 1px solid var(--gray-200); }
+.data-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.data-table th { background: var(--gray-100); padding: 1rem; text-align: left; font-weight: 600; color: var(--gray-700); border-bottom: 2px solid var(--gray-300); white-space: nowrap; }
+.data-table td { padding: 1rem; border-bottom: 1px solid var(--gray-200); color: var(--gray-600); }
+.data-table tbody tr:hover { background: var(--gray-50); }
+.data-table code { background: var(--gray-100); padding: 2px 6px; border-radius: var(--radius-sm); font-family: var(--font-mono); font-size: 0.8125rem; }
+
+.sub-step { margin: 1.5rem 0; padding: 1.5rem; background: var(--gray-50); border-radius: var(--radius-md); border-left: 3px solid var(--sf-blue-primary); }
+.sub-step h4 { color: var(--gray-800); margin-bottom: 0.5rem; }
+.sub-step p { color: var(--gray-600); font-size: 0.9375rem; }
+
+.completion-section { display: none; background: linear-gradient(135deg, var(--sf-green), #38a169); color: white; padding: 4rem 0; text-align: center; }
+.completion-section.visible { display: block; }
+.completion-container { max-width: 600px; margin: 0 auto; padding: 0 2rem; }
+.completion-icon { width: 80px; height: 80px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; }
+.completion-icon svg { width: 48px; height: 48px; fill: var(--sf-green); }
+.completion-section h2 { font-size: 2rem; margin-bottom: 1rem; }
+.completion-summary { display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; }
+.summary-item { text-align: center; }
+.summary-label { display: block; font-size: 0.875rem; opacity: 0.9; margin-bottom: 0.25rem; }
+.summary-value { font-size: 1.5rem; font-weight: 700; }
+
+.hol-footer { background: var(--gray-900); color: var(--gray-400); padding: 3rem 0; margin-left: var(--sidebar-width); }
+.footer-container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+.footer-brand { display: flex; align-items: center; gap: 1rem; }
+.footer-logo { height: 32px; width: auto; filter: brightness(0) invert(1); }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { color: var(--gray-400); transition: color var(--transition-fast); }
+.footer-links a:hover { color: white; }
+.footer-meta { text-align: right; font-size: 0.8125rem; }
+
+@media (max-width: 1200px) { .hero-container { grid-template-columns: 1fr; } .hero-visual { display: none; } }
+@media (max-width: 992px) { .progress-tracker { display: none; } .steps-container, .hol-footer { margin-left: 0; } .overview-grid { grid-template-columns: 1fr; } }
+@media (max-width: 768px) { .header-nav { display: none; } .hero-title { font-size: 1.75rem; } .hero-meta { flex-wrap: wrap; gap: 1rem; } .footer-container { flex-direction: column; gap: 2rem; text-align: center; } }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@media print { .progress-tracker, .header-nav, .step-toggle, .step-actions, .code-actions, .hero-cta { display: none !important; } .steps-container, .hol-footer { margin-left: 0; } .step-content.collapsed { display: block !important; } .step-card { break-inside: avoid; } .code-block { background: white !important; border: 1px solid #ccc; } .code-block code { color: black !important; } }
+</style>
+</head>
+<body data-hol-id="finserv-risk-hol">
+
+<header class="hol-header">
+    <div class="header-container">
+        <div class="logo-section">
+            <img src="https://www.logo.wine/a/logo/Snowflake_Inc./Snowflake_Inc.-Logo.wine.svg" alt="Snowflake" class="snowflake-logo">
+            <span class="logo-divider"></span>
+            <span class="hol-badge">Hands-On Lab</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#overview">Overview</a>
+            <a href="#prerequisites">Prerequisites</a>
+            <a href="#steps">Steps</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero-section">
+    <div class="hero-container">
+        <div class="hero-content">
+            <span class="industry-tag">Financial Services &mdash; Risk Management</span>
+            <h1 class="hero-title">Zero to Snowflake: Risk Management Analytics</h1>
+            <p class="hero-subtitle">Build a comprehensive risk analytics platform on Snowflake. Ingest and transform semi-structured risk data, apply governance controls with masking and row-level security, leverage Time Travel and zero-copy cloning, work with unstructured data, enrich with Marketplace datasets, interact with the Cortex Code AI coding agent, and visualise risk KPIs in a Streamlit dashboard.</p>
+            <div class="hero-meta">
+                <div class="meta-item">
+                    <svg class="meta-icon" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>
+                    <span>90 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <svg class="meta-icon" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6z"/></svg>
+                    <span>Intermediate</span>
+                </div>
+                <div class="meta-item">
+                    <svg class="meta-icon" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+                    <span>10 steps</span>
+                </div>
+            </div>
+            <a href="#step-1" class="hero-cta">Start Lab</a>
+        </div>
+        <div class="hero-visual">
+            <div class="architecture-preview">
+<pre>
+  RISK DATA SOURCES            SNOWFLAKE PLATFORM
+ +-----------------+    +----------------------------+
+ | JSON Risk Events|    |  RAW_DATA (Stage/Ingest)   |
+ | CSV Counterparty|--->|  ANALYTICS (Views/DT)      |
+ | PDF Reg Reports |    |  GOVERNANCE (Policies)      |
+ +-----------------+    +----------------------------+
+                              |           |
+                   +----------+  +--------+--------+
+                   | Cortex AI|  | Streamlit App    |
+                   | Masking  |  | Risk Dashboard   |
+                   | RLS/RBAC |  +------------------+
+                   +----------+
+                        |
+                 +------+------+
+                 | Marketplace |
+                 | (Cybersyn)  |
+                 +-------------+
+</pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="overview" class="content-section">
+    <div class="section-container">
+        <h2 class="section-title">Overview</h2>
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>What You Will Learn</h3>
+                <ul class="learning-list">
+                    <li>Create and configure Snowflake warehouses, databases, and schemas</li>
+                    <li>Ingest and transform semi-structured JSON risk data</li>
+                    <li>Apply RBAC, data masking, and row-level security policies</li>
+                    <li>Use Time Travel, zero-copy cloning, and UNDROP</li>
+                    <li>Work with unstructured data (PDF documents)</li>
+                    <li>Enrich data from the Snowflake Marketplace</li>
+                    <li>Use the Cortex Code AI coding agent</li>
+                    <li>Build a Streamlit in Snowflake dashboard</li>
+                </ul>
+            </div>
+            <div class="overview-card">
+                <h3>Technologies Used</h3>
+                <div class="tech-tags">
+                    <span class="tech-tag">Snowflake SQL</span>
+                    <span class="tech-tag">Snowsight Workspaces</span>
+                    <span class="tech-tag">VARIANT (JSON)</span>
+                    <span class="tech-tag">Dynamic Tables</span>
+                    <span class="tech-tag">Time Travel</span>
+                    <span class="tech-tag">Zero-Copy Clone</span>
+                    <span class="tech-tag">Data Masking</span>
+                    <span class="tech-tag">Row Access Policies</span>
+                    <span class="tech-tag">RBAC</span>
+                    <span class="tech-tag">Cortex Code</span>
+                    <span class="tech-tag">Streamlit in Snowflake</span>
+                    <span class="tech-tag">Marketplace</span>
+                    <span class="tech-tag">Directory Tables</span>
+                </div>
+            </div>
+            <div class="overview-card highlight">
+                <h3>Use Case</h3>
+                <p>You are a Risk Data Engineer at a financial services firm. Your firm tracks counterparty risk, credit risk exposures, market risk events, and operational risk incidents. You will build an end-to-end risk analytics platform on Snowflake, from raw ingestion through governed, enriched analytics, to a self-service dashboard and AI-assisted development.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="prerequisites" class="content-section alt-bg">
+    <div class="section-container">
+        <h2 class="section-title">Prerequisites</h2>
+        <div class="callout callout-info">
+            <div class="callout-icon">&#x2139;&#xFE0F;</div>
+            <div class="callout-content">
+                <strong>What You Need</strong>
+                <p>A Snowflake account (Enterprise or Business Critical edition recommended). If you do not have one, <a href="https://signup.snowflake.com/" target="_blank">sign up for a free 30-day trial</a>. A supported browser (Chrome, Firefox, Edge). No local software installation is required &mdash; everything runs inside Snowsight.</p>
+            </div>
+        </div>
+        <div class="callout callout-warning">
+            <div class="callout-icon">&#x26A0;&#xFE0F;</div>
+            <div class="callout-content">
+                <strong>Synthetic Data Disclaimer</strong>
+                <p>All data used in this lab is entirely synthetic and generated for educational purposes. It does not represent any real financial institution, customer, or transaction.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<aside class="progress-tracker" id="progressTracker">
+    <div class="progress-header">
+        <span>Progress</span>
+        <span class="progress-percent">0%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <nav class="steps-nav" id="stepsNav">
+        <a class="step-nav-item" data-step="1" href="#step-1"><span class="step-indicator">1</span>Account Setup</a>
+        <a class="step-nav-item" data-step="2" href="#step-2"><span class="step-indicator">2</span>Infrastructure Basics</a>
+        <a class="step-nav-item" data-step="3" href="#step-3"><span class="step-indicator">3</span>Ingest &amp; Transform</a>
+        <a class="step-nav-item" data-step="4" href="#step-4"><span class="step-indicator">4</span>Security &amp; Governance</a>
+        <a class="step-nav-item" data-step="5" href="#step-5"><span class="step-indicator">5</span>Time Travel &amp; Cloning</a>
+        <a class="step-nav-item" data-step="6" href="#step-6"><span class="step-indicator">6</span>Unstructured Data</a>
+        <a class="step-nav-item" data-step="7" href="#step-7"><span class="step-indicator">7</span>Marketplace</a>
+        <a class="step-nav-item" data-step="8" href="#step-8"><span class="step-indicator">8</span>Cortex Code AI</a>
+        <a class="step-nav-item" data-step="9" href="#step-9"><span class="step-indicator">9</span>Streamlit Dashboard</a>
+        <a class="step-nav-item" data-step="10" href="#step-10"><span class="step-indicator">10</span>Cleanup &amp; GitLab</a>
+    </nav>
+</aside>
+
+<main class="steps-container" id="steps">
+
+<!-- ============================================================ -->
+<!-- STEP 1: ACCOUNT SETUP -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-1" data-step="1">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">1</div>
+        <div class="step-info">
+            <h2 class="step-title">Create Your Snowflake Account</h2>
+            <span class="step-duration">~5 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>If you already have a Snowflake account, skip to Step 2. Otherwise, create a free 30-day trial account.</p>
+        </div>
+        <div class="sub-step">
+            <h4>Step 1.1 &mdash; Sign Up</h4>
+            <p>Navigate to <a href="https://signup.snowflake.com/" target="_blank">signup.snowflake.com</a> and create a new account. Select <strong>Enterprise</strong> edition and choose any cloud provider and region.</p>
+        </div>
+        <div class="sub-step">
+            <h4>Step 1.2 &mdash; Activate &amp; Log In</h4>
+            <p>Check your email for the activation link. Click it, set your password, and log in to <strong>Snowsight</strong> (the Snowflake web UI).</p>
+        </div>
+        <div class="sub-step">
+            <h4>Step 1.3 &mdash; Create a Workspace SQL File</h4>
+            <p>In Snowsight, go to <strong>Projects &raquo; Workspaces</strong>. Click <strong>+ Add New &raquo; SQL File</strong>. Name it <code>Risk HOL - Setup</code>. You will paste and run all SQL scripts from this lab inside Workspace SQL files.</p>
+        </div>
+        <div class="callout callout-tip">
+            <div class="callout-icon">&#x1F4A1;</div>
+            <div class="callout-content">
+                <strong>Workspaces Tip</strong>
+                <p>For each major step in this lab, create a new SQL file in Workspaces (e.g. "Risk HOL - Ingest", "Risk HOL - Security"). This keeps your code organised and easy to revisit.</p>
+            </div>
+        </div>
+        <div class="step-actions">
+            <button class="btn-check" onclick="markStepComplete(1)">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+                Mark as completed
+            </button>
+        </div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 2: INFRASTRUCTURE BASICS -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-2" data-step="2">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">2</div>
+        <div class="step-info">
+            <h2 class="step-title">Set Up Warehouse, Database &amp; Schemas</h2>
+            <span class="step-duration">~8 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Create the foundational Snowflake objects: a database, schemas for organising data by zone, a virtual warehouse for compute, and custom roles for RBAC.</p>
+        </div>
+        <div class="sub-step"><h4>Step 2.1 &mdash; Create Database &amp; Schemas</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- =====================================================
+-- RISK HOL: SETUP
+-- =====================================================
+USE ROLE sysadmin;
+
+CREATE OR REPLACE DATABASE risk_hol
+    COMMENT = 'Financial Services Risk Management Hands-On Lab';
+
+CREATE OR REPLACE SCHEMA risk_hol.raw_data
+    COMMENT = 'Raw ingested data (landing zone)';
+
+CREATE OR REPLACE SCHEMA risk_hol.analytics
+    COMMENT = 'Analytical views and transformed data';
+
+CREATE OR REPLACE SCHEMA risk_hol.governance
+    COMMENT = 'Masking policies, row-access policies';
+
+CREATE OR REPLACE SCHEMA risk_hol.unstructured
+    COMMENT = 'Unstructured document storage and processing';
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 2.2 &mdash; Create Virtual Warehouse</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>CREATE OR REPLACE WAREHOUSE risk_wh
+    WAREHOUSE_SIZE = 'SMALL'
+    AUTO_SUSPEND = 60
+    AUTO_RESUME = TRUE
+    INITIALLY_SUSPENDED = TRUE
+    COMMENT = 'Compute warehouse for Risk HOL';
+
+USE WAREHOUSE risk_wh;
+USE DATABASE risk_hol;
+USE SCHEMA raw_data;
+</code></pre>
+        </div>
+        <div class="callout callout-info">
+            <div class="callout-icon">&#x2139;&#xFE0F;</div>
+            <div class="callout-content">
+                <strong>Virtual Warehouses</strong>
+                <p>A virtual warehouse is a cluster of compute resources. It auto-suspends after 60 seconds of inactivity to minimise cost, and auto-resumes when a query is submitted. You can scale up/down on the fly.</p>
+            </div>
+        </div>
+        <div class="sub-step"><h4>Step 2.3 &mdash; Create Custom Roles (RBAC)</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE securityadmin;
+
+CREATE ROLE IF NOT EXISTS risk_admin
+    COMMENT = 'Admin role for the Risk HOL';
+
+CREATE ROLE IF NOT EXISTS risk_analyst
+    COMMENT = 'Analyst role - can read analytics, cannot see PII';
+
+CREATE ROLE IF NOT EXISTS risk_auditor
+    COMMENT = 'Auditor role - read-only, limited row access';
+
+-- Role hierarchy
+GRANT ROLE risk_admin TO ROLE sysadmin;
+GRANT ROLE risk_analyst TO ROLE risk_admin;
+GRANT ROLE risk_auditor TO ROLE risk_admin;
+
+-- Grant database and warehouse privileges
+GRANT USAGE ON DATABASE risk_hol TO ROLE risk_admin;
+GRANT USAGE ON DATABASE risk_hol TO ROLE risk_analyst;
+GRANT USAGE ON DATABASE risk_hol TO ROLE risk_auditor;
+GRANT USAGE ON ALL SCHEMAS IN DATABASE risk_hol TO ROLE risk_admin;
+GRANT USAGE ON ALL SCHEMAS IN DATABASE risk_hol TO ROLE risk_analyst;
+GRANT USAGE ON ALL SCHEMAS IN DATABASE risk_hol TO ROLE risk_auditor;
+GRANT ALL ON SCHEMA risk_hol.raw_data TO ROLE risk_admin;
+GRANT ALL ON SCHEMA risk_hol.analytics TO ROLE risk_admin;
+GRANT ALL ON SCHEMA risk_hol.governance TO ROLE risk_admin;
+GRANT ALL ON SCHEMA risk_hol.unstructured TO ROLE risk_admin;
+GRANT SELECT ON FUTURE TABLES IN SCHEMA risk_hol.analytics TO ROLE risk_analyst;
+GRANT SELECT ON FUTURE VIEWS IN SCHEMA risk_hol.analytics TO ROLE risk_analyst;
+GRANT SELECT ON FUTURE VIEWS IN SCHEMA risk_hol.analytics TO ROLE risk_auditor;
+
+USE ROLE accountadmin;
+GRANT USAGE ON WAREHOUSE risk_wh TO ROLE risk_admin;
+GRANT USAGE ON WAREHOUSE risk_wh TO ROLE risk_analyst;
+GRANT USAGE ON WAREHOUSE risk_wh TO ROLE risk_auditor;
+
+-- Grants needed for masking policies later
+GRANT APPLY MASKING POLICY ON ACCOUNT TO ROLE risk_admin;
+GRANT APPLY ROW ACCESS POLICY ON ACCOUNT TO ROLE risk_admin;
+
+-- Switch back
+USE ROLE risk_admin;
+USE WAREHOUSE risk_wh;
+USE DATABASE risk_hol;
+
+SELECT 'Setup complete' AS STATUS;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 2.4 &mdash; Verify Setup</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>SHOW SCHEMAS IN DATABASE risk_hol;
+SHOW WAREHOUSES LIKE 'RISK%';
+SHOW ROLES LIKE 'RISK%';
+</code></pre>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(2)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 3: INGEST & TRANSFORM SEMI-STRUCTURED DATA -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-3" data-step="3">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">3</div>
+        <div class="step-info">
+            <h2 class="step-title">Ingest &amp; Transform Semi-Structured Data</h2>
+            <span class="step-duration">~12 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Financial risk data often arrives as semi-structured JSON (e.g. risk event feeds, counterparty API responses). We will create synthetic risk data as JSON, load it into a VARIANT column, and then flatten and transform it into structured tables. We also demonstrate Dynamic Tables for automated pipelines, following the same pattern as the <a href="https://www.snowflake.com/en/developers/guides/zero-to-snowflake/" target="_blank">Zero to Snowflake</a> guide.</p>
+        </div>
+        <div class="sub-step"><h4>Step 3.1 &mdash; Create Base Tables and Load Synthetic Data</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE risk_admin;
+USE DATABASE risk_hol;
+USE SCHEMA raw_data;
+USE WAREHOUSE risk_wh;
+
+-- Counterparty table
+CREATE OR REPLACE TABLE counterparties (
+    counterparty_id VARCHAR(10) PRIMARY KEY,
+    legal_name VARCHAR(200),
+    country VARCHAR(50),
+    sector VARCHAR(50),
+    credit_rating VARCHAR(5),
+    lei VARCHAR(20),
+    pii_contact_email VARCHAR(100),
+    pii_phone VARCHAR(30),
+    onboarding_date DATE,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+INSERT INTO counterparties
+SELECT
+    'CP' || LPAD(SEQ4()::VARCHAR, 6, '0'),
+    ARRAY_CONSTRUCT('Meridian Capital','Atlas Holdings','Vanguard Finance',
+        'Pinnacle Investments','Sterling Bank','Oceanic Securities',
+        'Northern Trust Corp','Pacific Ventures','Eagle Trading',
+        'Falcon Asset Mgmt')[UNIFORM(0,9,RANDOM())]::VARCHAR
+        || ' ' || UNIFORM(1,999,RANDOM())::VARCHAR,
+    ARRAY_CONSTRUCT('US','UK','DE','JP','SG','CH','AU','CA','FR','BR')[UNIFORM(0,9,RANDOM())]::VARCHAR,
+    ARRAY_CONSTRUCT('Banking','Insurance','Asset Management','Hedge Fund',
+        'Private Equity','Pension Fund','Sovereign Wealth')[UNIFORM(0,6,RANDOM())]::VARCHAR,
+    ARRAY_CONSTRUCT('AAA','AA+','AA','AA-','A+','A','A-','BBB+','BBB','BBB-','BB+','BB')[UNIFORM(0,11,RANDOM())]::VARCHAR,
+    UPPER(SUBSTRING(MD5(RANDOM()::VARCHAR),1,20)),
+    'contact' || SEQ4() || '@' || ARRAY_CONSTRUCT('meridian.com','atlas.io','vanguard.net','sterling.co.uk')[UNIFORM(0,3,RANDOM())]::VARCHAR,
+    '+' || UNIFORM(1,9,RANDOM())::VARCHAR || LPAD(UNIFORM(100000000,999999999,RANDOM())::VARCHAR,9,'0'),
+    DATEADD('day', -UNIFORM(30,3650,RANDOM()), CURRENT_DATE()),
+    TRUE
+FROM TABLE(GENERATOR(ROWCOUNT => 500));
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 3.2 &mdash; Create Semi-Structured Risk Events (JSON)</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Raw risk events as JSON in a VARIANT column
+CREATE OR REPLACE TABLE risk_events_raw (
+    event_id VARCHAR(20) PRIMARY KEY,
+    ingestion_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+    payload VARIANT
+);
+
+INSERT INTO risk_events_raw (event_id, payload)
+SELECT
+    'EVT' || LPAD(SEQ4()::VARCHAR, 10, '0'),
+    OBJECT_CONSTRUCT(
+        'event_type', ARRAY_CONSTRUCT('CREDIT','MARKET','OPERATIONAL','LIQUIDITY','COUNTERPARTY')[UNIFORM(0,4,RANDOM())]::VARCHAR,
+        'event_date', DATEADD('day', -UNIFORM(1,730,RANDOM()), CURRENT_DATE())::VARCHAR,
+        'counterparty_id', 'CP' || LPAD(UNIFORM(0,499,RANDOM())::VARCHAR,6,'0'),
+        'exposure_usd', ROUND(UNIFORM(10000,50000000,RANDOM())::FLOAT,2),
+        'currency', ARRAY_CONSTRUCT('USD','EUR','GBP','JPY','CHF')[UNIFORM(0,4,RANDOM())]::VARCHAR,
+        'risk_score', ROUND(UNIFORM(1,100,RANDOM())::FLOAT,1),
+        'region', ARRAY_CONSTRUCT('AMERICAS','EMEA','APAC')[UNIFORM(0,2,RANDOM())]::VARCHAR,
+        'description', ARRAY_CONSTRUCT(
+            'Limit breach on trading book',
+            'Margin call trigger event',
+            'System outage in settlement',
+            'Failed trade reconciliation',
+            'VaR exceedance detected',
+            'Collateral shortfall',
+            'Regulatory capital threshold',
+            'Counterparty downgrade alert'
+        )[UNIFORM(0,7,RANDOM())]::VARCHAR,
+        'severity', ARRAY_CONSTRUCT('LOW','MEDIUM','HIGH','CRITICAL')[UNIFORM(0,3,RANDOM())]::VARCHAR,
+        'status', ARRAY_CONSTRUCT('OPEN','INVESTIGATING','MITIGATED','CLOSED')[UNIFORM(0,3,RANDOM())]::VARCHAR,
+        'mitigation_actions', ARRAY_CONSTRUCT(
+            OBJECT_CONSTRUCT('action','Increase collateral','owner','Risk Ops','deadline', DATEADD('day',UNIFORM(1,30,RANDOM()),CURRENT_DATE())::VARCHAR),
+            OBJECT_CONSTRUCT('action','Reduce exposure','owner','Trading Desk','deadline', DATEADD('day',UNIFORM(1,14,RANDOM()),CURRENT_DATE())::VARCHAR)
+        )
+    )
+FROM TABLE(GENERATOR(ROWCOUNT => 10000));
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 3.3 &mdash; Query Semi-Structured Data</h4><p>Snowflake's VARIANT type lets you query JSON directly with colon (<code>:</code>) and bracket (<code>[]</code>) notation.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Explore the raw JSON payload
+SELECT
+    event_id,
+    payload:event_type::STRING AS event_type,
+    payload:event_date::DATE AS event_date,
+    payload:counterparty_id::STRING AS counterparty_id,
+    payload:exposure_usd::NUMBER(15,2) AS exposure_usd,
+    payload:risk_score::FLOAT AS risk_score,
+    payload:severity::STRING AS severity,
+    payload:status::STRING AS status
+FROM risk_events_raw
+LIMIT 20;
+
+-- Parse the nested mitigation_actions array using FLATTEN
+SELECT
+    r.event_id,
+    r.payload:event_type::STRING AS event_type,
+    f.value:action::STRING AS action,
+    f.value:owner::STRING AS owner,
+    f.value:deadline::DATE AS deadline
+FROM risk_events_raw r,
+    LATERAL FLATTEN(INPUT => r.payload:mitigation_actions) f
+LIMIT 20;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 3.4 &mdash; Transform into Structured Tables with Dynamic Tables</h4><p>Dynamic Tables automatically stay up to date as source data changes, eliminating manual ETL scheduling.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Dynamic Table: Flatten risk events into structured form
+CREATE OR REPLACE DYNAMIC TABLE analytics.risk_events
+    LAG = '1 minute'
+    WAREHOUSE = risk_wh
+AS
+SELECT
+    r.event_id,
+    r.payload:event_type::STRING AS event_type,
+    r.payload:event_date::DATE AS event_date,
+    r.payload:counterparty_id::STRING AS counterparty_id,
+    r.payload:exposure_usd::NUMBER(15,2) AS exposure_usd,
+    r.payload:currency::STRING AS currency,
+    r.payload:risk_score::FLOAT AS risk_score,
+    r.payload:region::STRING AS region,
+    r.payload:description::STRING AS description,
+    r.payload:severity::STRING AS severity,
+    r.payload:status::STRING AS status
+FROM raw_data.risk_events_raw r;
+
+-- Dynamic Table: Risk summary by type, severity, and region
+CREATE OR REPLACE DYNAMIC TABLE analytics.risk_summary
+    LAG = '2 minutes'
+    WAREHOUSE = risk_wh
+AS
+SELECT
+    re.event_type,
+    re.severity,
+    re.region,
+    DATE_TRUNC('MONTH', re.event_date) AS month,
+    COUNT(*) AS event_count,
+    SUM(re.exposure_usd) AS total_exposure,
+    ROUND(AVG(re.risk_score),1) AS avg_risk_score,
+    COUNT(CASE WHEN re.status = 'OPEN' THEN 1 END) AS open_events
+FROM analytics.risk_events re
+GROUP BY re.event_type, re.severity, re.region, DATE_TRUNC('MONTH', re.event_date);
+
+-- Verify the Dynamic Tables
+SELECT * FROM analytics.risk_events LIMIT 10;
+SELECT * FROM analytics.risk_summary ORDER BY month DESC LIMIT 20;
+</code></pre>
+        </div>
+        <div class="callout callout-info">
+            <div class="callout-icon">&#x2139;&#xFE0F;</div>
+            <div class="callout-content">
+                <strong>Dynamic Tables</strong>
+                <p>Dynamic Tables automatically refresh as underlying source data changes. The <code>LAG</code> parameter defines the maximum staleness. Snowflake handles all the scheduling. You can view the pipeline DAG in <strong>Data &raquo; Databases &raquo; Dynamic Tables &raquo; Graph</strong>.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(3)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 4: SECURITY & GOVERNANCE -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-4" data-step="4">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">4</div>
+        <div class="step-info">
+            <h2 class="step-title">Apply Security: Masking, RBAC &amp; Row-Level Security</h2>
+            <span class="step-duration">~12 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>In financial services, protecting PII and restricting data access is paramount. We will apply Dynamic Data Masking to hide sensitive fields from non-privileged roles, and a Row Access Policy (RLS) to restrict which risk events different roles can see.</p>
+        </div>
+        <div class="sub-step"><h4>Step 4.1 &mdash; Dynamic Data Masking (PII Protection)</h4><p>We mask the <code>pii_contact_email</code> and <code>pii_phone</code> columns so that only <code>risk_admin</code> sees real values.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE risk_admin;
+USE DATABASE risk_hol;
+USE SCHEMA governance;
+
+-- Email masking policy
+CREATE OR REPLACE MASKING POLICY email_mask AS (val STRING) RETURNS STRING ->
+    CASE
+        WHEN CURRENT_ROLE() IN ('RISK_ADMIN','ACCOUNTADMIN','SYSADMIN') THEN val
+        ELSE REGEXP_REPLACE(val, '.+@', '****@')
+    END;
+
+-- Phone masking policy
+CREATE OR REPLACE MASKING POLICY phone_mask AS (val STRING) RETURNS STRING ->
+    CASE
+        WHEN CURRENT_ROLE() IN ('RISK_ADMIN','ACCOUNTADMIN','SYSADMIN') THEN val
+        ELSE CONCAT('***-***-', RIGHT(val, 4))
+    END;
+
+-- Apply policies to the counterparties table
+ALTER TABLE raw_data.counterparties
+    MODIFY COLUMN pii_contact_email
+    SET MASKING POLICY governance.email_mask;
+
+ALTER TABLE raw_data.counterparties
+    MODIFY COLUMN pii_phone
+    SET MASKING POLICY governance.phone_mask;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 4.2 &mdash; Test Masking</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- As risk_admin (full access)
+USE ROLE risk_admin;
+SELECT counterparty_id, legal_name, pii_contact_email, pii_phone
+FROM raw_data.counterparties LIMIT 5;
+
+-- As risk_analyst (masked)
+GRANT SELECT ON TABLE raw_data.counterparties TO ROLE risk_analyst;
+USE ROLE risk_analyst;
+SELECT counterparty_id, legal_name, pii_contact_email, pii_phone
+FROM raw_data.counterparties LIMIT 5;
+-- You should see '****@domain.com' and '***-***-XXXX'
+
+USE ROLE risk_admin;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 4.3 &mdash; Row Access Policy (RLS)</h4><p>Auditors can only see CRITICAL and HIGH severity events. Analysts see everything except CRITICAL.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE risk_admin;
+
+CREATE OR REPLACE ROW ACCESS POLICY governance.risk_severity_policy
+    AS (severity STRING) RETURNS BOOLEAN ->
+    CASE
+        WHEN CURRENT_ROLE() IN ('RISK_ADMIN','ACCOUNTADMIN','SYSADMIN') THEN TRUE
+        WHEN CURRENT_ROLE() = 'RISK_ANALYST' AND severity != 'CRITICAL' THEN TRUE
+        WHEN CURRENT_ROLE() = 'RISK_AUDITOR' AND severity IN ('CRITICAL','HIGH') THEN TRUE
+        ELSE FALSE
+    END;
+
+-- Apply RLS to the risk_events dynamic table
+ALTER DYNAMIC TABLE analytics.risk_events
+    ADD ROW ACCESS POLICY governance.risk_severity_policy ON (severity);
+
+-- Test: as risk_auditor, only HIGH and CRITICAL events visible
+GRANT SELECT ON DYNAMIC TABLE analytics.risk_events TO ROLE risk_auditor;
+USE ROLE risk_auditor;
+SELECT severity, COUNT(*) FROM analytics.risk_events GROUP BY severity;
+
+USE ROLE risk_admin;
+</code></pre>
+        </div>
+        <div class="callout callout-success">
+            <div class="callout-icon">&#x2705;</div>
+            <div class="callout-content">
+                <strong>Governance Summary</strong>
+                <p>You now have: <strong>RBAC</strong> (3 custom roles with a hierarchy), <strong>Dynamic Data Masking</strong> (PII hidden for non-admin roles), and <strong>Row-Level Security</strong> (severity-based row filtering per role). These policies are enforced at the platform level and cannot be bypassed.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(4)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 5: TIME TRAVEL & CLONING -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-5" data-step="5">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">5</div>
+        <div class="step-info">
+            <h2 class="step-title">Time Travel, Cloning &amp; Zero-Copy Architecture</h2>
+            <span class="step-duration">~10 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Time Travel lets you query, restore, and compare historical data. Zero-Copy Cloning creates instant, storage-free copies of databases, schemas, or tables. Together, they enable safe development, instant recovery, and audit capabilities.</p>
+        </div>
+        <div class="sub-step"><h4>Step 5.1 &mdash; Zero-Copy Clone for Development</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE risk_admin;
+
+-- Clone the counterparties table (instant, zero storage cost)
+CREATE OR REPLACE TABLE raw_data.counterparties_dev
+    CLONE raw_data.counterparties;
+
+-- Verify both have identical row counts
+SELECT 'PRODUCTION' AS source, COUNT(*) AS row_count FROM raw_data.counterparties
+UNION ALL
+SELECT 'DEV CLONE' AS source, COUNT(*) AS row_count FROM raw_data.counterparties_dev;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 5.2 &mdash; Simulate an Accidental Update</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- "Accidentally" set all counterparties to inactive
+UPDATE raw_data.counterparties SET is_active = FALSE;
+
+-- Confirm the damage
+SELECT COUNT(*) AS active_count
+FROM raw_data.counterparties WHERE is_active = TRUE;
+-- Returns 0 - all counterparties deactivated!
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 5.3 &mdash; Recover with Time Travel</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Compare current vs. 5 minutes ago
+SELECT
+    (SELECT COUNT(*) FROM raw_data.counterparties WHERE is_active = TRUE) AS current_active,
+    (SELECT COUNT(*) FROM raw_data.counterparties AT(OFFSET => -60*5) WHERE is_active = TRUE) AS five_min_ago_active;
+
+-- Restore from Time Travel
+CREATE OR REPLACE TABLE raw_data.counterparties
+    AS SELECT * FROM raw_data.counterparties AT(OFFSET => -60*5);
+
+-- Verify restoration
+SELECT COUNT(*) AS active_count
+FROM raw_data.counterparties WHERE is_active = TRUE;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 5.4 &mdash; UNDROP (Recover Dropped Objects)</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- "Accidentally" drop the dev clone
+DROP TABLE raw_data.counterparties_dev;
+
+-- Recover it instantly
+UNDROP TABLE raw_data.counterparties_dev;
+
+-- Confirm it's back
+SELECT COUNT(*) FROM raw_data.counterparties_dev;
+
+-- Clean up the dev clone (for real this time)
+DROP TABLE raw_data.counterparties_dev;
+</code></pre>
+        </div>
+        <div class="callout callout-info">
+            <div class="callout-icon">&#x2139;&#xFE0F;</div>
+            <div class="callout-content">
+                <strong>Time Travel Retention</strong>
+                <p>Trial accounts support up to 1 day of Time Travel. Enterprise edition supports up to 90 days. UNDROP works within the Time Travel retention period.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(5)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 6: UNSTRUCTURED DATA -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-6" data-step="6">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">6</div>
+        <div class="step-info">
+            <h2 class="step-title">Working with Unstructured Data</h2>
+            <span class="step-duration">~8 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Financial services firms deal with unstructured data such as regulatory filings, risk reports, and compliance documents. Snowflake supports internal stages for storing any file type and Directory Tables for cataloguing them. We will simulate uploading risk report documents and querying their metadata.</p>
+        </div>
+        <div class="sub-step"><h4>Step 6.1 &mdash; Create an Internal Stage with Directory Table</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE SCHEMA unstructured;
+
+-- Create an internal stage for risk documents
+CREATE OR REPLACE STAGE risk_documents_stage
+    DIRECTORY = (ENABLE = TRUE)
+    COMMENT = 'Internal stage for regulatory and risk report documents';
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 6.2 &mdash; Simulate Document Uploads</h4><p>In production, you would upload PDFs using <code>PUT</code> or the Snowsight UI. Here, we create a tracking table to simulate the catalogue.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>CREATE OR REPLACE TABLE document_catalogue (
+    doc_id VARCHAR(10) PRIMARY KEY,
+    file_name VARCHAR(200),
+    doc_type VARCHAR(50),
+    department VARCHAR(50),
+    upload_date DATE,
+    file_size_kb NUMBER,
+    summary VARCHAR(500)
+);
+
+INSERT INTO document_catalogue VALUES
+('DOC001','Q4_2025_VaR_Report.pdf','Risk Report','Market Risk',
+    '2025-12-15', 2450, 'Quarterly Value-at-Risk report covering equity, FX, and rates portfolios'),
+('DOC002','Basel_III_Capital_Adequacy.pdf','Regulatory Filing','Compliance',
+    '2025-11-30', 5800, 'Basel III capital adequacy submission for the supervisory authority'),
+('DOC003','Operational_Risk_Incident_Log.pdf','Incident Report','Operational Risk',
+    '2026-01-10', 1200, 'Monthly operational risk incident log and loss event summary'),
+('DOC004','Counterparty_Credit_Review.pdf','Credit Report','Credit Risk',
+    '2026-02-01', 3400, 'Annual counterparty credit worthiness review and rating assessment'),
+('DOC005','Stress_Test_Results_2025.pdf','Stress Test','Enterprise Risk',
+    '2025-12-20', 7800, 'Annual stress test results under adverse and severely adverse scenarios'),
+('DOC006','AML_SAR_Filing_Template.pdf','Compliance','Financial Crime',
+    '2026-01-15', 890, 'Suspicious Activity Report template and filing guidance');
+
+-- Query the catalogue
+SELECT doc_type, COUNT(*) AS doc_count, SUM(file_size_kb) AS total_size_kb
+FROM document_catalogue
+GROUP BY doc_type
+ORDER BY doc_count DESC;
+</code></pre>
+        </div>
+        <div class="callout callout-tip">
+            <div class="callout-icon">&#x1F4A1;</div>
+            <div class="callout-content">
+                <strong>Uploading Real Files</strong>
+                <p>To upload actual files: use <code>PUT file:///path/to/file @risk_documents_stage;</code> from SnowSQL, or drag-and-drop via the Snowsight UI under <strong>Data &raquo; Databases &raquo; Stages</strong>. Once uploaded, query the <strong>Directory Table</strong> with <code>SELECT * FROM DIRECTORY(@risk_documents_stage);</code> to see file metadata.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(6)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 7: MARKETPLACE -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-7" data-step="7">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">7</div>
+        <div class="step-info">
+            <h2 class="step-title">Enrich with the Snowflake Marketplace</h2>
+            <span class="step-duration">~10 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>The Snowflake Marketplace provides free and paid third-party datasets that you can use to enrich your internal data without copying or moving it. For financial services, the <strong>Cybersyn Financial &amp; Economic Essentials</strong> dataset is highly valuable for correlating risk events with macro-economic indicators.</p>
+        </div>
+        <div class="sub-step"><h4>Step 7.1 &mdash; Get a Free Dataset from the Marketplace</h4>
+            <ol style="color:var(--gray-600); padding-left:1.5rem; margin-top:0.5rem;">
+                <li>In Snowsight, click <strong>Data Products &raquo; Marketplace</strong></li>
+                <li>Search for <strong>"Cybersyn Financial &amp; Economic Essentials"</strong></li>
+                <li>Click <strong>Get</strong> on the free dataset</li>
+                <li>Accept the terms and grant access to the appropriate roles</li>
+                <li>The dataset will appear as a shared database in your account</li>
+            </ol>
+        </div>
+        <div class="sub-step"><h4>Step 7.2 &mdash; Explore the Marketplace Data</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Explore the Cybersyn dataset (database name may vary)
+SHOW DATABASES LIKE '%CYBERSYN%';
+
+-- Example: Query interest rate data
+-- (adjust the database/schema/table names to match what was installed)
+-- SELECT * FROM FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_FRED_TIMESERIES
+-- WHERE variable_name ILIKE '%federal funds%'
+-- ORDER BY date DESC LIMIT 20;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 7.3 &mdash; Join Marketplace Data with Internal Risk Data</h4></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>-- Example view combining risk events with economic context
+-- Uncomment and adjust once you have the Marketplace dataset installed:
+/*
+CREATE OR REPLACE VIEW analytics.risk_with_economic_context AS
+SELECT
+    re.event_date,
+    re.event_type,
+    re.severity,
+    re.exposure_usd,
+    re.region,
+    fed.value AS fed_funds_rate
+FROM analytics.risk_events re
+LEFT JOIN FINANCIAL__ECONOMIC_ESSENTIALS.CYBERSYN.FINANCIAL_FRED_TIMESERIES fed
+    ON re.event_date = fed.date
+    AND fed.variable_name ILIKE '%federal funds effective%'
+WHERE re.event_date >= '2024-01-01';
+*/
+
+SELECT 'Marketplace integration ready' AS STATUS;
+</code></pre>
+        </div>
+        <div class="callout callout-info">
+            <div class="callout-icon">&#x2728;</div>
+            <div class="callout-content">
+                <strong>Zero-Copy Data Sharing</strong>
+                <p>Marketplace data is not copied into your account. You access the provider's data directly. It is always up to date and incurs no storage cost on your side.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(7)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 8: CORTEX CODE AI -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-8" data-step="8">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">8</div>
+        <div class="step-info">
+            <h2 class="step-title">Interact with Snowflake Cortex Code AI Coding Agent</h2>
+            <span class="step-duration">~10 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p><strong>Cortex Code</strong> is Snowflake's AI coding agent that runs in your IDE (VS Code / JetBrains) and in the CLI. It understands your Snowflake environment and can generate SQL, Python, and Streamlit code, explain queries, and help with debugging. Let's try it for risk analytics tasks.</p>
+        </div>
+        <div class="sub-step"><h4>Step 8.1 &mdash; Install Cortex Code</h4>
+            <ol style="color:var(--gray-600); padding-left:1.5rem; margin-top:0.5rem;">
+                <li>Open <strong>VS Code</strong> (or JetBrains IDE)</li>
+                <li>Go to <strong>Extensions</strong> and search for <strong>"Snowflake Cortex Code"</strong></li>
+                <li>Install the extension and sign in with your Snowflake account</li>
+                <li>Alternatively, use the CLI: <code>pip install cortex-code</code> then run <code>cortex</code></li>
+            </ol>
+        </div>
+        <div class="sub-step"><h4>Step 8.2 &mdash; Try These Prompts</h4><p>Open Cortex Code and try the following natural language prompts against your <code>risk_hol</code> database:</p></div>
+        <div class="code-block" data-language="text">
+            <div class="code-header"><span class="code-language">Cortex Code Prompts</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>Prompt 1: "Show me the top 10 counterparties by total exposure from 
+           the risk_events table, joined with counterparty names"
+
+Prompt 2: "Create a SQL query that shows the monthly trend of CRITICAL 
+           risk events by region for the last 12 months"
+
+Prompt 3: "Write a Streamlit app that connects to risk_hol.analytics.risk_summary 
+           and displays a bar chart of exposure by event_type"
+
+Prompt 4: "Explain what the risk_severity_policy row access policy does 
+           in the governance schema"
+
+Prompt 5: "Generate a masking policy for the LEI column that only shows 
+           the first 4 characters to non-admin roles"
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 8.3 &mdash; Apply AI-Generated Code</h4><p>Review the SQL that Cortex Code generates, then run it in your Snowflake Workspace to verify it works against your lab data. Cortex Code can also execute SQL directly if connected to your account.</p></div>
+        <div class="callout callout-tip">
+            <div class="callout-icon">&#x1F4A1;</div>
+            <div class="callout-content">
+                <strong>Cortex Code Tips</strong>
+                <p>Cortex Code understands your Snowflake objects, roles, and permissions. It can generate DDL, DML, governance policies, Streamlit apps, and dbt models. Use it to accelerate development while always reviewing the output before executing in production.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(8)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 9: STREAMLIT DASHBOARD -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-9" data-step="9">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">9</div>
+        <div class="step-info">
+            <h2 class="step-title">Build a Streamlit Risk Dashboard</h2>
+            <span class="step-duration">~12 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Create an interactive risk dashboard using Streamlit in Snowflake (SiS). The app runs entirely within Snowflake infrastructure &mdash; no external servers needed.</p>
+        </div>
+        <div class="sub-step"><h4>Step 9.1 &mdash; Create the Streamlit App</h4>
+            <ol style="color:var(--gray-600); padding-left:1.5rem; margin-top:0.5rem;">
+                <li>In Snowsight, navigate to <strong>Projects &raquo; Streamlit</strong></li>
+                <li>Click <strong>+ Streamlit App</strong></li>
+                <li>Name: <code>RISK_DASHBOARD</code></li>
+                <li>Warehouse: <code>RISK_WH</code></li>
+                <li>Database: <code>RISK_HOL</code>, Schema: <code>ANALYTICS</code></li>
+                <li>Paste the code below and click <strong>Run</strong></li>
+            </ol>
+        </div>
+        <div class="code-block" data-language="python">
+            <div class="code-header"><span class="code-language">Python (Streamlit)</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>import streamlit as st
+from snowflake.snowpark.context import get_active_session
+import altair as alt
+
+st.set_page_config(page_title="Risk Dashboard", page_icon="🏦", layout="wide")
+
+session = get_active_session()
+
+st.markdown("""
+&lt;style&gt;
+[data-testid="stMetricValue"] { font-size: 2rem; color: #29B5E8; }
+h1, h2, h3 { color: #1565C0; }
+&lt;/style&gt;
+""", unsafe_allow_html=True)
+
+st.title("🏦 Risk Management Dashboard")
+st.caption("Powered by Snowflake &amp; Streamlit in Snowflake")
+
+@st.cache_data(ttl=300)
+def load_summary():
+    return session.sql("""
+        SELECT event_type, severity, region, month,
+               event_count, total_exposure, avg_risk_score, open_events
+        FROM risk_hol.analytics.risk_summary
+        ORDER BY month DESC
+    """).to_pandas()
+
+df = load_summary()
+
+col1, col2, col3, col4 = st.columns(4)
+col1.metric("Total Events", f"{df['EVENT_COUNT'].sum():,}")
+col2.metric("Total Exposure", f"${df['TOTAL_EXPOSURE'].sum():,.0f}")
+col3.metric("Open Events", f"{df['OPEN_EVENTS'].sum():,}")
+col4.metric("Avg Risk Score", f"{df['AVG_RISK_SCORE'].mean():.1f}")
+
+st.divider()
+left, right = st.columns(2)
+
+with left:
+    st.subheader("Exposure by Risk Type")
+    chart_type = df.groupby('EVENT_TYPE')['TOTAL_EXPOSURE'].sum().reset_index()
+    bar = alt.Chart(chart_type).mark_bar(color='#29B5E8').encode(
+        x=alt.X('TOTAL_EXPOSURE:Q', title='Total Exposure ($)'),
+        y=alt.Y('EVENT_TYPE:N', sort='-x', title=''),
+        tooltip=['EVENT_TYPE','TOTAL_EXPOSURE']
+    ).properties(height=300)
+    st.altair_chart(bar, use_container_width=True)
+
+with right:
+    st.subheader("Events by Severity")
+    chart_sev = df.groupby('SEVERITY')['EVENT_COUNT'].sum().reset_index()
+    donut = alt.Chart(chart_sev).mark_arc(innerRadius=50).encode(
+        theta='EVENT_COUNT:Q',
+        color=alt.Color('SEVERITY:N', scale=alt.Scale(
+            domain=['LOW','MEDIUM','HIGH','CRITICAL'],
+            range=['#51cf66','#ffd43b','#ff922b','#ff6b6b']
+        )),
+        tooltip=['SEVERITY','EVENT_COUNT']
+    ).properties(height=300)
+    st.altair_chart(donut, use_container_width=True)
+
+st.divider()
+st.subheader("Monthly Risk Trend")
+region_filter = st.multiselect("Filter by Region", df['REGION'].unique(), default=df['REGION'].unique())
+filtered = df[df['REGION'].isin(region_filter)]
+monthly = filtered.groupby(['MONTH','EVENT_TYPE'])['EVENT_COUNT'].sum().reset_index()
+line = alt.Chart(monthly).mark_line(point=True, strokeWidth=2).encode(
+    x=alt.X('MONTH:T', title='Month'),
+    y=alt.Y('EVENT_COUNT:Q', title='Event Count'),
+    color='EVENT_TYPE:N',
+    tooltip=['MONTH','EVENT_TYPE','EVENT_COUNT']
+).properties(height=350)
+st.altair_chart(line, use_container_width=True)
+
+st.divider()
+st.subheader("Detailed Data")
+st.dataframe(filtered, use_container_width=True)
+st.caption("Data is synthetic and for demonstration purposes only.")
+</code></pre>
+        </div>
+        <div class="callout callout-success">
+            <div class="callout-icon">&#x2705;</div>
+            <div class="callout-content">
+                <strong>Streamlit in Snowflake</strong>
+                <p>Your app runs on Snowflake compute. No external hosting, no data leaving Snowflake, authentication is inherited from your Snowflake session. Share the app with colleagues by granting them USAGE on the app.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(9)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+<!-- ============================================================ -->
+<!-- STEP 10: CLEANUP & GITLAB -->
+<!-- ============================================================ -->
+<article class="step-card" id="step-10" data-step="10">
+    <div class="step-header" onclick="toggleStep(this)">
+        <div class="step-number">10</div>
+        <div class="step-info">
+            <h2 class="step-title">Cleanup &amp; Add to GitLab Repository</h2>
+            <span class="step-duration">~5 min</span>
+        </div>
+        <button class="step-toggle" aria-expanded="true"><svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg></button>
+    </div>
+    <div class="step-content">
+        <div class="step-description">
+            <p>Clean up the lab objects and push your work to a GitLab repository for version control and collaboration.</p>
+        </div>
+        <div class="sub-step"><h4>Step 10.1 &mdash; Cleanup (Optional)</h4><p>Run these commands to remove all lab objects when you are finished.</p></div>
+        <div class="code-block" data-language="sql">
+            <div class="code-header"><span class="code-language">SQL</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code>USE ROLE accountadmin;
+
+DROP DATABASE IF EXISTS risk_hol;
+DROP WAREHOUSE IF EXISTS risk_wh;
+DROP ROLE IF EXISTS risk_admin;
+DROP ROLE IF EXISTS risk_analyst;
+DROP ROLE IF EXISTS risk_auditor;
+
+SELECT 'Cleanup complete' AS STATUS;
+</code></pre>
+        </div>
+        <div class="sub-step"><h4>Step 10.2 &mdash; Add to GitLab Repository</h4><p>Save your SQL scripts and this HoL to a GitLab repo for version control.</p></div>
+        <div class="code-block" data-language="bash">
+            <div class="code-header"><span class="code-language">Bash</span><div class="code-actions"><button onclick="copyCode(this)" title="Copy"><svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg></button></div></div>
+            <pre><code># Create a project directory
+mkdir snowflake-risk-hol && cd snowflake-risk-hol
+
+# Initialise git
+git init
+
+# Create a directory structure
+mkdir -p scripts streamlit docs
+
+# Copy your SQL files into scripts/
+# cp ~/path/to/setup.sql scripts/
+# cp ~/path/to/ingest.sql scripts/
+# cp ~/path/to/security.sql scripts/
+# etc.
+
+# Copy the Streamlit app
+# cp ~/path/to/risk_dashboard.py streamlit/
+
+# Copy this HoL HTML
+# cp ~/Downloads/Snowflake_FinServ_Risk_HOL.html docs/
+
+# Create a README
+cat > README.md &lt;&lt;'EOF'
+# Snowflake Risk Management Hands-On Lab
+
+A comprehensive hands-on lab demonstrating Snowflake capabilities
+for Financial Services Risk Management.
+
+## Modules
+1. Account Setup
+2. Infrastructure (Warehouse, Database, Schemas, RBAC)
+3. Ingest & Transform Semi-Structured Data (JSON, Dynamic Tables)
+4. Security & Governance (Masking, RLS, RBAC)
+5. Time Travel, Cloning & Zero-Copy Architecture
+6. Unstructured Data (Stages, Directory Tables)
+7. Snowflake Marketplace Integration
+8. Cortex Code AI Coding Agent
+9. Streamlit Risk Dashboard
+10. Cleanup & GitLab
+
+## Prerequisites
+- Snowflake Enterprise account (or 30-day trial)
+- Supported browser
+
+## Duration
+~90 minutes
+EOF
+
+# Stage, commit, and push
+git add .
+git commit -m "Initial commit: Snowflake Risk Management HoL"
+
+# Add your GitLab remote and push
+# git remote add origin https://gitlab.com/YOUR_ORG/snowflake-risk-hol.git
+# git push -u origin main
+</code></pre>
+        </div>
+        <div class="callout callout-tip">
+            <div class="callout-icon">&#x1F4A1;</div>
+            <div class="callout-content">
+                <strong>GitLab Integration</strong>
+                <p>Replace <code>YOUR_ORG</code> with your GitLab namespace. If the repository does not exist yet, create it in GitLab first, then add the remote. You can also use Snowflake's native <a href="https://docs.snowflake.com/en/developer-guide/git/git-overview" target="_blank">Git integration</a> to connect a repository directly to a Snowflake stage.</p>
+            </div>
+        </div>
+        <div class="step-actions"><button class="btn-check" onclick="markStepComplete(10)"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Mark as completed</button></div>
+    </div>
+</article>
+
+</main>
+
+<!-- Completion Section -->
+<section class="completion-section" id="completionSection">
+    <div class="completion-container">
+        <div class="completion-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+        <h2>Congratulations!</h2>
+        <p>You have completed the Zero to Snowflake: Risk Management Analytics Hands-On Lab.</p>
+        <div class="completion-summary">
+            <div class="summary-item">
+                <span class="summary-label">Total Time</span>
+                <span class="summary-value" id="totalTime">--</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Steps Completed</span>
+                <span class="summary-value">10/10</span>
+            </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:2rem;margin-top:2rem;">
+            <h3>Next Steps</h3>
+            <ul style="list-style:none;text-align:left;margin-top:1rem;">
+                <li style="margin-bottom:0.5rem;">&#x1F4DA; Explore <a href="https://docs.snowflake.com" target="_blank" style="color:white;text-decoration:underline;">Snowflake Documentation</a></li>
+                <li style="margin-bottom:0.5rem;">&#x1F680; Try more <a href="https://quickstarts.snowflake.com" target="_blank" style="color:white;text-decoration:underline;">Snowflake Quickstarts</a></li>
+                <li style="margin-bottom:0.5rem;">&#x1F916; Explore <a href="https://docs.snowflake.com/en/user-guide/snowflake-cortex" target="_blank" style="color:white;text-decoration:underline;">Cortex AI capabilities</a></li>
+                <li style="margin-bottom:0.5rem;">&#x1F3E6; Read <a href="https://www.snowflake.com/en/solutions/industries/financial-services/" target="_blank" style="color:white;text-decoration:underline;">Snowflake for Financial Services</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="hol-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <img src="https://www.logo.wine/a/logo/Snowflake_Inc./Snowflake_Inc.-Logo.wine.svg" alt="Snowflake" class="footer-logo">
+            <p>Snowflake Hands-On Labs</p>
+        </div>
+        <div class="footer-links">
+            <a href="https://docs.snowflake.com" target="_blank">Documentation</a>
+            <a href="https://community.snowflake.com" target="_blank">Community</a>
+            <a href="https://quickstarts.snowflake.com" target="_blank">More Labs</a>
+        </div>
+        <div class="footer-meta">
+            <p>Based on <a href="https://www.snowflake.com/en/developers/guides/zero-to-snowflake/" target="_blank" style="color:var(--gray-400);">Zero to Snowflake</a></p>
+            <p>&copy; 2026 Snowflake Inc.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+const HOLState = { totalSteps: 0, completedSteps: new Set(), startTime: null, currentStep: 1 };
+
+document.addEventListener('DOMContentLoaded', function() {
+    HOLState.totalSteps = document.querySelectorAll('.step-card').length;
+    HOLState.startTime = new Date();
+    loadProgress();
+    initScrollSpy();
+    updateProgressUI();
+});
+
+function toggleStep(header) {
+    const card = header.closest('.step-card');
+    const content = card.querySelector('.step-content');
+    const toggle = card.querySelector('.step-toggle');
+    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', !isExpanded);
+    content.classList.toggle('collapsed', isExpanded);
+}
+
+function markStepComplete(n) {
+    HOLState.completedSteps.add(n);
+    const card = document.getElementById('step-' + n);
+    if (card) {
+        card.classList.add('completed');
+        const btn = card.querySelector('.btn-check');
+        if (btn) { btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg> Completed'; btn.disabled = true; btn.style.background = 'var(--sf-green)'; btn.style.color = 'white'; }
+    }
+    const nav = document.querySelector('.step-nav-item[data-step="' + n + '"]');
+    if (nav) nav.classList.add('completed');
+    saveProgress(); updateProgressUI();
+    if (HOLState.completedSteps.size === HOLState.totalSteps) showCompletion();
+    else if (n < HOLState.totalSteps) setTimeout(() => { document.getElementById('step-' + (n + 1)).scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 500);
+}
+
+function updateProgressUI() {
+    const p = (HOLState.completedSteps.size / HOLState.totalSteps) * 100;
+    const fill = document.getElementById('progressFill'); if (fill) fill.style.width = p + '%';
+    const pct = document.querySelector('.progress-percent'); if (pct) pct.textContent = Math.round(p) + '%';
+}
+
+function saveProgress() {
+    localStorage.setItem('hol-progress-finserv-risk', JSON.stringify({ completedSteps: Array.from(HOLState.completedSteps), startTime: HOLState.startTime.toISOString() }));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem('hol-progress-finserv-risk');
+    if (saved) {
+        try {
+            const data = JSON.parse(saved);
+            data.completedSteps.forEach(s => { HOLState.completedSteps.add(s); const c = document.getElementById('step-' + s); if (c) c.classList.add('completed'); const n = document.querySelector('.step-nav-item[data-step="' + s + '"]'); if (n) n.classList.add('completed'); });
+            if (data.startTime) HOLState.startTime = new Date(data.startTime);
+        } catch (e) {}
+    }
+}
+
+function initScrollSpy() {
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => { if (entry.isIntersecting) { const n = entry.target.dataset.step; document.querySelectorAll('.step-nav-item').forEach(i => i.classList.remove('active')); const a = document.querySelector('.step-nav-item[data-step="' + n + '"]'); if (a) a.classList.add('active'); HOLState.currentStep = parseInt(n); } });
+    }, { rootMargin: '-100px 0px -50% 0px' });
+    document.querySelectorAll('.step-card').forEach(c => observer.observe(c));
+}
+
+function copyCode(button) {
+    const block = button.closest('.code-block');
+    const code = block.querySelector('code');
+    navigator.clipboard.writeText(code.textContent).then(() => {
+        const orig = button.innerHTML;
+        button.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>';
+        button.style.color = 'var(--sf-green)';
+        setTimeout(() => { button.innerHTML = orig; button.style.color = ''; }, 2000);
+    });
+}
+
+function showCompletion() {
+    const sec = document.getElementById('completionSection'); if (sec) { sec.classList.add('visible'); sec.scrollIntoView({ behavior: 'smooth' }); const dur = new Date() - HOLState.startTime; const m = Math.floor(dur / 60000); const s = Math.floor((dur % 60000) / 1000); const el = document.getElementById('totalTime'); if (el) el.textContent = m + 'm ' + s + 's'; }
+}
+</script>
+</body>
+</html>
