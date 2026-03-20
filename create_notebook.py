@@ -23,7 +23,19 @@ md("""# Financial Services Risk Management — Hands-On Lab
 | **Prerequisites** | Snowflake account (Enterprise or 30-day trial) |
 | **Warehouse** | SMALL, auto-suspend 60 s |
 
-**Snowflake features covered:** Cross-Region Inference, Cortex Code, Databases & Schemas, Virtual Warehouses, RBAC, VARIANT & semi-structured data, LATERAL FLATTEN, Dynamic Tables, Dynamic Data Masking, Row Access Policies, Zero-Copy Cloning, Time Travel, UNDROP, Internal Stages, Directory Tables, Marketplace, Streamlit in Snowflake.
+### Contents
+
+| Step | Topic | Snowflake Features |
+|:---:|---|---|
+| **1** | Enable Cortex Code | Cross-Region Inference, Cortex Code |
+| **2** | Setup Infrastructure | Database, Schemas, Virtual Warehouse, RBAC |
+| **3** | Ingest & Transform Data | VARIANT, OBJECT_CONSTRUCT, LATERAL FLATTEN, Dynamic Tables |
+| **🤖** | **Cortex Code Challenge** | **Build a Streamlit app from a prompt** |
+| **4** | Security & Governance | Dynamic Data Masking, Row Access Policies |
+| **5** | Time Travel & Cloning | Zero-Copy Clone, AT(OFFSET), UNDROP |
+| **6** | Unstructured Data | Internal Stages, Directory Tables |
+| **7** | Marketplace | Cybersyn Financial & Economic Essentials |
+| **10** | Cleanup | DROP objects |
 
 ---
 
