@@ -23,7 +23,50 @@ md("""# Financial Services Risk Management — Hands-On Lab
 | **Prerequisites** | Snowflake account (Enterprise or 30-day trial) |
 | **Warehouse** | SMALL, auto-suspend 60 s |
 
-**Snowflake features covered:** Cross-Region Inference, Cortex Code, Databases & Schemas, Virtual Warehouses, RBAC, VARIANT & semi-structured data, LATERAL FLATTEN, Dynamic Tables, Dynamic Data Masking, Row Access Policies, Zero-Copy Cloning, Time Travel, UNDROP, Internal Stages, Directory Tables, Marketplace, Streamlit in Snowflake.""")
+**Snowflake features covered:** Cross-Region Inference, Cortex Code, Databases & Schemas, Virtual Warehouses, RBAC, VARIANT & semi-structured data, LATERAL FLATTEN, Dynamic Tables, Dynamic Data Masking, Row Access Policies, Zero-Copy Cloning, Time Travel, UNDROP, Internal Stages, Directory Tables, Marketplace, Streamlit in Snowflake.
+
+---
+
+### Data Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        RISK_HOL  (Database)                        │
+├──────────────┬──────────────┬───────────────┬───────────────────────┤
+│  RAW_DATA    │  ANALYTICS   │  GOVERNANCE   │  UNSTRUCTURED         │
+│  (Schema)    │  (Schema)    │  (Schema)     │  (Schema)             │
+│              │              │               │                       │
+│ counterpar-  │ risk_events  │ email_mask    │ risk_documents_stage  │
+│   ties       │  (Dynamic    │ phone_mask    │   (Internal Stage +   │
+│              │   Table)     │  (Masking     │    Directory Table)   │
+│ risk_events  │              │   Policies)   │                       │
+│   _raw       │ risk_summary │               │ document_catalogue    │
+│  (VARIANT    │  (Dynamic    │ risk_severity │                       │
+│   JSON)      │   Table)     │   _policy     │                       │
+│              │              │  (Row Access  │                       │
+│              │              │   Policy)     │                       │
+└──────┬───────┴──────▲───────┴───────────────┴───────────────────────┘
+       │              │
+       │   ┌──────────┴──────────┐
+       └──►│   Dynamic Tables    │
+           │   (Automated ELT)   │
+           │                     │
+           │  risk_events_raw    │
+           │    ──[LAG 1 min]──► │  risk_events
+           │    ──[LAG 2 min]──► │  risk_summary
+           └─────────────────────┘
+
+┌──────────────────────┐    ┌──────────────────────┐
+│  Snowflake           │    │  Streamlit in         │
+│  Marketplace         │    │  Snowflake            │
+│  (Cybersyn)          │◄──►│  (Risk Dashboard)     │
+└──────────────────────┘    └──────────────────────┘
+
+Roles:  RISK_ADMIN  ──►  RISK_ANALYST  ──►  RISK_AUDITOR
+        (full access)    (masked PII)      (HIGH/CRITICAL only)
+
+Warehouse:  RISK_WH  (SMALL, auto-suspend 60s)
+```""")
 
 # =============================================================================
 # STEP 1 — CORTEX CODE PREREQUISITES
